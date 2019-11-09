@@ -8,9 +8,11 @@ class Attribute{
     }
     public function enable(){
         glEnableVertexAttribArray($this->attr);
+        return $this;
     }
-    public function define($stride,$size = 2,$pointer = 0){
-        glVertexAttribPointer($this->attr, $size, GL_FLOAT, GL_FALSE, $stride, $pointer);
+    public function define($stride,$size = 2,$pointer = 0,$type = GL_FLOAT,$normalized = GL_FALSE){
+        glVertexAttribPointer($this->attr, $size, $type, $normalized, $stride, $pointer);
+        return $this;
     }
     function location(){
         return $this->$attr;

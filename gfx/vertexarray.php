@@ -6,10 +6,10 @@ class VertexArray{
     function __construct(){
         glGenVertexArrays(1, $vaos);
         $this->id = array_pop($vaos);
-        echo $this->id."\n";
     }
     function bind(){
         glBindVertexArray($this->id);
+        return $this;
     }
     function get(){
         return $this->id;
