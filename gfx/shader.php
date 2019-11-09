@@ -8,6 +8,7 @@ require_once("utils/assert.php");
     }
 
     class Shader{
+        use Error;
         private $shader;
         private $path;
         public function __construct($path,$type){

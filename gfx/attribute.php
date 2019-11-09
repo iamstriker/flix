@@ -2,6 +2,7 @@
 namespace sr\gfx;
 
 class Attribute{
+    use Error;
     private $attr;
     function __construct(ShaderProgram $program,string $name){
         $this->attr = glGetAttribLocation($program->get(), $name);

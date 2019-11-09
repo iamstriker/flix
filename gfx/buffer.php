@@ -3,6 +3,7 @@ namespace sr\gfx;
 require_once("utils/assert.php");
 
 class Buffer{
+    use Error;
     private $id;
     private $type;
     function __construct(){

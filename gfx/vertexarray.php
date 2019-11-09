@@ -2,6 +2,7 @@
 namespace sr\gfx;
 
 class VertexArray{
+    use Error;
     private $id;
     function __construct(){
         glGenVertexArrays(1, $vaos);

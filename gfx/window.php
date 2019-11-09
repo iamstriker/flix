@@ -1,6 +1,7 @@
 <?php
 namespace sr\gfx;
 class Window{
+    use Error;
     private $name;
     private $width;
     private $height;
