@@ -1,9 +1,13 @@
 <?php
+require_once("gfx/error.php");
 require_once("gfx/shader.php");
 require_once("gfx/attribute.php");
 require_once("gfx/buffer.php");
+require_once("gfx/uniform.php");
 require_once("gfx/vertexarray.php");
 require_once("gfx/window.php");
+require_once("utils/core.php");
+
 
 use \sr\gfx\Shader;
 use \sr\gfx\ShaderProgram;
@@ -12,20 +16,17 @@ use \sr\gfx\Window;
 use \sr\gfx\Attribute;
 use \sr\gfx\Buffer;
 use \sr\gfx\VertexArray;
+use \sr\gfx\Uniform;
 
 
 $window = new Window("PHP test application",640,480);
 $window->init();
 
-$vertex = new Shader("shaders/vertex.vsh",E_SHADER::VERTEX);
-$fragment = new Shader("shaders/fragment.fsh",E_SHADER::FRAGMENT);
-$vertex->compile();
-$fragment->compile();
+$vertex = (new Shader("shaders/vertex.vsh",E_SHADER::VERTEX))->compile();
+$fragment = (new Shader("shaders/fragment.fsh",E_SHADER::FRAGMENT))->compile();
 
 $program = new ShaderProgram();
-$program->add($vertex);
-$program->add($fragment);
-$program->link();
+$program->add($vertex)->add($fragment)->link();
 
 //vertices:
 $vertices = [
@@ -54,35 +55,21 @@ $vbo->data($vertices);
 $ebo->bind(GL_ELEMENT_ARRAY_BUFFER);
 $ebo->data($elements);
 
+$uniform = new Uniform("ourColor");
+$uniform->bind($program);
+
 $program->use();
 $pos = new Attribute($program,"position");
 $pos->enable();
 //glVertexAttribPointer($posAttrib, 2, GL_FLOAT, GL_FALSE, 5 * 4, 0);
 $pos->define(3*4);
 
-$event = new SDL_Event;
-$deltaTime = 0;
-$frames = 0;
-$fps = 0;
-$start = time();
+$app = new \sr\core\App();
 $window->show();
-
-while(true) {
-    // Clear the screen to black
-    glClearColor(0, 0.0, 1.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    // Draw a rectangle from the 2 triangles using 6 indices
+$app->update(function($deltatime) use(&$window){
+    $window->swap();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
-	$window->swap();
-    SDL_PollEvent($event);
-    if($event->type == SDL_KEYDOWN || $event->type == SDL_QUIT) break;
-    $end = time();
-    if ($end - $start > 0.25)
-    {
-        $fps = $frames / ($end - $start);
-        $start = $end;
-        $frames = 0;
-    }
-    ++$frames;
-}
+});
+
+
 ?>
